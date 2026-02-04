@@ -1,4 +1,4 @@
-# MimiClaw
+# MimiClaw: Pocket AI Assistant with Shareable Memory
 
 <p align="center">
   <img src="assets/banner.png" alt="MimiClaw" width="480" />
