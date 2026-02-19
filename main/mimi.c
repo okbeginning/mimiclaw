@@ -108,8 +108,6 @@ void app_main(void)
     /* Print memory info */
     ESP_LOGI(TAG, "Internal free: %d bytes",
              (int)heap_caps_get_free_size(MALLOC_CAP_INTERNAL));
-    ESP_LOGI(TAG, "PSRAM free:    %d bytes",
-             (int)heap_caps_get_free_size(MALLOC_CAP_SPIRAM));
 
     /* Input */
     button_Init();

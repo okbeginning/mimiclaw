@@ -172,13 +172,12 @@ static void agent_loop_task(void *arg)
 {
     ESP_LOGI(TAG, "Agent loop started on core %d", xPortGetCoreID());
 
-    /* Allocate large buffers from PSRAM */
-    char *system_prompt = heap_caps_calloc(1, MIMI_CONTEXT_BUF_SIZE, MALLOC_CAP_SPIRAM);
-    char *history_json = heap_caps_calloc(1, MIMI_LLM_STREAM_BUF_SIZE, MALLOC_CAP_SPIRAM);
-    char *tool_output = heap_caps_calloc(1, TOOL_OUTPUT_SIZE, MALLOC_CAP_SPIRAM);
+    char *system_prompt = calloc(1, MIMI_CONTEXT_BUF_SIZE);
+    char *history_json = calloc(1, MIMI_LLM_STREAM_BUF_SIZE);
+    char *tool_output = calloc(1, TOOL_OUTPUT_SIZE);
 
     if (!system_prompt || !history_json || !tool_output) {
-        ESP_LOGE(TAG, "Failed to allocate PSRAM buffers");
+        ESP_LOGE(TAG, "Failed to allocate runtime buffers");
         vTaskDelete(NULL);
         return;
     }
@@ -318,8 +317,8 @@ static void agent_loop_task(void *arg)
         free(msg.content);
 
         /* Log memory status */
-        ESP_LOGI(TAG, "Free PSRAM: %d bytes",
-                 (int)heap_caps_get_free_size(MALLOC_CAP_SPIRAM));
+        ESP_LOGI(TAG, "Free internal heap: %d bytes",
+                 (int)heap_caps_get_free_size(MALLOC_CAP_INTERNAL));
     }
 }
 
