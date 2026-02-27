@@ -193,14 +193,24 @@ mimi> restart                     # 再起動
 
 ### USB（JTAG）vs UART：どのポートで何をするか
 
-ほとんどの ESP32-S3 開発ボードには **2つの USB-C ポート**があります。用途を正しく理解することが重要です：
+ほとんどの ESP32-S3 開発ボードには **2つの USB-C ポート**があります：
 
-| ポート | ラベル | プロトコル | 用途 |
-|--------|--------|------------|------|
-| **USB** | USB / JTAG | ネイティブ USB Serial/JTAG | `idf.py flash`、`idf.py monitor`、JTAGデバッグ |
-| **COM** | UART / COM | 外部 UART ブリッジ（CP2102/CH340） | **REPL CLI**、シリアルコンソール、`idf.py monitor` |
+| ポート | 用途 |
+|--------|------|
+| **USB**（JTAG） | `idf.py flash`、JTAGデバッグ |
+| **COM**（UART） | **REPL CLI**、シリアルコンソール |
 
-> **REPL CLIを使用するには、UART（COM）ポートに接続する必要があります。**USB（JTAG）ポートではありません。ESP-IDFコンソールはデフォルトでUART出力に設定されています（`CONFIG_ESP_CONSOLE_UART_DEFAULT=y`）。USB（JTAG）ポートは補助的なシリアル出力を提供しますが、対話的なREPL入力を確実にサポートしません。
+> **REPLにはUART（COM）ポートが必要です。** USB（JTAG）ポートは対話的なREPL入力をサポートしません。
+
+<details>
+<summary>ポート詳細と推奨ワークフロー</summary>
+
+| ポート | ラベル | プロトコル |
+|--------|--------|------------|
+| **USB** | USB / JTAG | ネイティブ USB Serial/JTAG |
+| **COM** | UART / COM | 外部 UART ブリッジ（CP2102/CH340） |
+
+ESP-IDFコンソールはデフォルトでUART出力に設定されています（`CONFIG_ESP_CONSOLE_UART_DEFAULT=y`）。
 
 **両方のポートを同時に接続している場合：**
 
@@ -219,6 +229,8 @@ idf.py -p /dev/cu.usbmodem11401 flash
 idf.py -p /dev/cu.usbserial-110 monitor
 # または任意のシリアルターミナル：screen、minicom、PuTTY（ボーレート 115200）
 ```
+
+</details>
 
 ## メモリ
 

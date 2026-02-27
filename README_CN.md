@@ -208,14 +208,24 @@ mimi> restart                     # 重启
 
 ### USB (JTAG) 与 UART：哪个口做什么
 
-大多数 ESP32-S3 开发板有 **两个 USB-C 口**，务必区分清楚：
+大多数 ESP32-S3 开发板有 **两个 USB-C 口**：
 
-| 端口 | 标注 | 协议 | 用途 |
-|------|------|------|------|
-| **USB** | USB / JTAG | 原生 USB Serial/JTAG | `idf.py flash`、`idf.py monitor`、JTAG 调试 |
-| **COM** | UART / COM | 外置 UART 桥接芯片（CP2102/CH340） | **REPL 命令行**、串口控制台、`idf.py monitor` |
+| 端口 | 用途 |
+|------|------|
+| **USB**（JTAG） | `idf.py flash`、JTAG 调试 |
+| **COM**（UART） | **REPL 命令行**、串口控制台 |
 
-> **使用 REPL 命令行必须连接 UART（COM）口**，而不是 USB（JTAG）口。ESP-IDF 控制台默认配置为 UART 输出（`CONFIG_ESP_CONSOLE_UART_DEFAULT=y`）。USB（JTAG）口提供辅助串口输出，但不能可靠地支持交互式 REPL 输入。
+> **REPL 必须连接 UART（COM）口。** USB（JTAG）口不支持交互式 REPL 输入。
+
+<details>
+<summary>端口详情与推荐工作流</summary>
+
+| 端口 | 标注 | 协议 |
+|------|------|------|
+| **USB** | USB / JTAG | 原生 USB Serial/JTAG |
+| **COM** | UART / COM | 外置 UART 桥接芯片（CP2102/CH340） |
+
+ESP-IDF 控制台默认配置为 UART 输出（`CONFIG_ESP_CONSOLE_UART_DEFAULT=y`）。
 
 **同时连接两个口时：**
 
@@ -234,6 +244,8 @@ idf.py -p /dev/cu.usbmodem11401 flash
 idf.py -p /dev/cu.usbserial-110 monitor
 # 或使用任意串口工具：screen、minicom、PuTTY，波特率 115200
 ```
+
+</details>
 
 ## 记忆
 

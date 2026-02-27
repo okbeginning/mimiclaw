@@ -193,21 +193,31 @@ mimi> restart                     # reboot
 
 ### USB (JTAG) vs UART: Which Port for What
 
-Most ESP32-S3 dev boards expose **two USB-C ports**. Understanding which to use is critical:
+Most ESP32-S3 dev boards expose **two USB-C ports**:
 
-| Port | Label | Protocol | Use for |
-|------|-------|----------|---------|
-| **USB** | USB / JTAG | Native USB Serial/JTAG | `idf.py flash`, `idf.py monitor`, JTAG debugging |
-| **COM** | UART / COM | External UART bridge (CP2102/CH340) | **REPL CLI**, serial console, `idf.py monitor` |
+| Port | Use for |
+|------|---------|
+| **USB** (JTAG) | `idf.py flash`, JTAG debugging |
+| **COM** (UART) | **REPL CLI**, serial console |
 
-> **To use the REPL CLI, you must connect via the UART (COM) port**, not the USB (JTAG) port. The ESP-IDF console/REPL is configured to use UART by default (`CONFIG_ESP_CONSOLE_UART_DEFAULT=y`). The USB (JTAG) port provides secondary console output but does not support interactive REPL input reliably.
+> **REPL requires the UART (COM) port.** The USB (JTAG) port does not support interactive REPL input.
+
+<details>
+<summary>Port details & recommended workflow</summary>
+
+| Port | Label | Protocol |
+|------|-------|----------|
+| **USB** | USB / JTAG | Native USB Serial/JTAG |
+| **COM** | UART / COM | External UART bridge (CP2102/CH340) |
+
+The ESP-IDF console/REPL is configured to use UART by default (`CONFIG_ESP_CONSOLE_UART_DEFAULT=y`).
 
 **If you have both ports connected simultaneously:**
 
-- The USB (JTAG) port handles flash/download and provides a secondary serial output
-- The UART (COM) port provides the primary interactive console for the REPL
-- On macOS, both ports appear as `/dev/cu.usbmodem*` or `/dev/cu.usbserial-*` — check `ls /dev/cu.usb*` to identify them
-- On Linux, USB (JTAG) typically shows as `/dev/ttyACM0` and UART as `/dev/ttyUSB0`
+- USB (JTAG) handles flash/download and provides secondary serial output
+- UART (COM) provides the primary interactive console for the REPL
+- macOS: both appear as `/dev/cu.usbmodem*` or `/dev/cu.usbserial-*` — run `ls /dev/cu.usb*` to identify
+- Linux: USB (JTAG) → `/dev/ttyACM0`, UART → `/dev/ttyUSB0`
 
 **Recommended workflow:**
 
@@ -219,6 +229,8 @@ idf.py -p /dev/cu.usbmodem11401 flash
 idf.py -p /dev/cu.usbserial-110 monitor
 # or use any serial terminal: screen, minicom, PuTTY at 115200 baud
 ```
+
+</details>
 
 ## Memory
 
